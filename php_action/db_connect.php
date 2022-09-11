@@ -3,8 +3,8 @@
 $localhost = "localhost";
 $username = "root";
 $password = "";
-$dbname = "gasmark";
-$store_url = "http://localhost/gasmark/gasmark/";
+$dbname = "inventory";
+$store_url = "http://localhost/inventory/inventory/";
 // db connection
 $connect = new mysqli($localhost, $username, $password, $dbname);
 // check connection

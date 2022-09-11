@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.4
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 10, 2022 at 04:39 AM
--- Server version: 10.1.37-MariaDB
--- PHP Version: 7.1.26
+-- Generation Time: Sep 11, 2022 at 07:02 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gasmark`
+-- Database: `inventory`
 --
 
 -- --------------------------------------------------------
@@ -31,8 +30,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `brands` (
   `brand_id` int(11) NOT NULL,
   `brand_name` varchar(255) NOT NULL,
-  `brand_active` int(11) NOT NULL DEFAULT '0',
-  `brand_status` int(11) NOT NULL DEFAULT '0'
+  `brand_active` int(11) NOT NULL DEFAULT 0,
+  `brand_status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -40,9 +39,9 @@ CREATE TABLE `brands` (
 --
 
 INSERT INTO `brands` (`brand_id`, `brand_name`, `brand_active`, `brand_status`) VALUES
-(1, 'HP_GAS', 1, 1),
-(2, 'BHARAT_GAS', 1, 1),
-(3, 'Extratel', 1, 1);
+(1, 'Jamuna', 1, 1),
+(2, 'BHARAT_GAS', 1, 2),
+(3, 'Extratel', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -53,8 +52,8 @@ INSERT INTO `brands` (`brand_id`, `brand_name`, `brand_active`, `brand_status`) 
 CREATE TABLE `categories` (
   `categories_id` int(11) NOT NULL,
   `categories_name` varchar(255) NOT NULL,
-  `categories_active` int(11) NOT NULL DEFAULT '0',
-  `categories_status` int(11) NOT NULL DEFAULT '0'
+  `categories_active` int(11) NOT NULL DEFAULT 0,
+  `categories_status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -62,10 +61,11 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`categories_id`, `categories_name`, `categories_active`, `categories_status`) VALUES
-(1, 'Rural', 1, 1),
-(2, 'Domestic', 1, 1),
-(3, 'Commercial', 1, 1),
-(4, 'Industrial', 1, 1);
+(1, 'Category', 1, 1),
+(2, 'Domestic', 1, 2),
+(3, 'Commercial', 1, 2),
+(4, 'Industrial', 1, 2),
+(5, 'category1', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -117,7 +117,7 @@ CREATE TABLE `orders` (
   `payment_status` int(11) NOT NULL,
   `payment_place` int(11) NOT NULL,
   `gstn` varchar(255) NOT NULL,
-  `order_status` int(11) NOT NULL DEFAULT '0',
+  `order_status` int(11) NOT NULL DEFAULT 0,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -127,7 +127,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`order_id`, `order_date`, `client_name`, `client_contact`, `delivery_staff`, `delivery_status`, `sub_total`, `vat`, `total_amount`, `discount`, `grand_total`, `paid`, `due`, `payment_type`, `payment_status`, `payment_place`, `gstn`, `order_status`, `user_id`) VALUES
 (1, '2022-08-02', '1', '9090809080', 'Arjun Kale', 'On the Way', '500.00', '90.00', '590.00', '', '590.00', '590', '0.00', 2, 1, 1, '90.00', 1, 1),
-(2, '2022-08-02', '2', '5667566756', 'Arjun Kale', '', '876.00', '157.68', '1033.68', '', '1033.68', '1033.68', '0.00', 2, 1, 1, '157.68', 1, 1);
+(2, '2022-08-02', '2', '5667566756', 'Arjun Kale', '', '876.00', '157.68', '1033.68', '', '1033.68', '1033.68', '0.00', 2, 1, 1, '157.68', 2, 1),
+(3, '2022-09-11', '1', '+880198373879', 'Delivery Man 1', 'On the Way', '20.00', '3.60', '23.60', '', '23.60', '24', '-0.40', 2, 1, 1, '3.60', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -137,12 +138,12 @@ INSERT INTO `orders` (`order_id`, `order_date`, `client_name`, `client_contact`,
 
 CREATE TABLE `order_item` (
   `order_item_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL DEFAULT '0',
-  `product_id` int(11) NOT NULL DEFAULT '0',
+  `order_id` int(11) NOT NULL DEFAULT 0,
+  `product_id` int(11) NOT NULL DEFAULT 0,
   `quantity` varchar(255) NOT NULL,
   `rate` varchar(255) NOT NULL,
   `total` varchar(255) NOT NULL,
-  `order_item_status` int(11) NOT NULL DEFAULT '0'
+  `order_item_status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -151,7 +152,8 @@ CREATE TABLE `order_item` (
 
 INSERT INTO `order_item` (`order_item_id`, `order_id`, `product_id`, `quantity`, `rate`, `total`, `order_item_status`) VALUES
 (1, 1, 1, '1', '500', '500.00', 1),
-(2, 2, 3, '1', '876', '876.00', 1);
+(2, 2, 3, '1', '876', '876.00', 2),
+(3, 3, 4, '1', '20', '20.00', 1);
 
 -- --------------------------------------------------------
 
@@ -167,8 +169,8 @@ CREATE TABLE `product` (
   `categories_id` int(11) NOT NULL,
   `quantity` varchar(255) NOT NULL,
   `rate` varchar(255) NOT NULL,
-  `active` int(11) NOT NULL DEFAULT '0',
-  `status` int(11) NOT NULL DEFAULT '0'
+  `active` int(11) NOT NULL DEFAULT 0,
+  `status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -176,9 +178,10 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `product_name`, `product_image`, `brand_id`, `categories_id`, `quantity`, `rate`, `active`, `status`) VALUES
-(1, 'Compact 5 kg cylinders', 'gas-cylinders-500x500.jpg', 1, 1, '99', '500', 1, 1),
-(2, '14.2 kg cylinders', 'a-250x250.jpg', 1, 2, '233', '989', 1, 1),
-(3, '19 KG industrial', 'cylinder.jfif', 3, 4, '499', '876', 1, 1);
+(1, 'Compact 5 kg cylinders', 'gas-cylinders-500x500.jpg', 1, 1, '99', '500', 2, 2),
+(2, '14.2 kg cylinders', 'a-250x250.jpg', 1, 2, '233', '989', 2, 2),
+(3, '19 KG industrial', 'cylinder.jfif', 3, 4, '499', '876', 2, 2),
+(4, 'Test Product 1', 'depositphotos_378271014-stock-photo-word-writing-text-product-test.jpg', 1, 1, '99', '20', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -193,11 +196,11 @@ CREATE TABLE `tbl_client` (
   `mob_no` varchar(150) NOT NULL,
   `reffering` varchar(150) NOT NULL,
   `address` varchar(250) NOT NULL,
-  `created_date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_date_time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `delete_status` int(11) NOT NULL,
   `image` varchar(150) NOT NULL,
   `connection_no` varchar(50) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT '0'
+  `status` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -205,8 +208,8 @@ CREATE TABLE `tbl_client` (
 --
 
 INSERT INTO `tbl_client` (`id`, `name`, `gender`, `mob_no`, `reffering`, `address`, `created_date_time`, `delete_status`, `image`, `connection_no`, `status`) VALUES
-(1, 'Jagdish Bhosale', 'Male', '9090809080', '5788534234', 'Shop No. 2, Krushna Kamal Complex, New Adgaon Naka, Om Nagar, Panchavati, Nashik, Maharashtra 422003', '2022-08-02 13:32:38', 0, 'pexels-italo-melo-2379005.jpg', '115', 1),
-(2, 'Ashoka Chauvan', 'Male', '5667566756', '23442432434', 'Plot no 2, behind hotel seven heaven Sonawane mala, Chetana nagar, Rane Nagar, Nashik, Maharashtra 422009', '2022-08-02 14:31:29', 0, 'male.jfif', '113', 2);
+(1, 'Tanvir UU Dhaka', 'Male', '+880198373879', '98765432', 'Uttara 5 sec, h-06 dhaka', '2022-09-11 15:49:04', 0, 'pexels-italo-melo-2379005.jpg', '115', 1),
+(2, 'Ashoka Chauvan', 'Male', '5667566756', '23442432434', 'Plot no 2, behind hotel seven heaven Sonawane mala, Chetana nagar, Rane Nagar, Nashik, Maharashtra 422009', '2022-09-11 15:49:11', 1, 'male.jfif', '113', 2);
 
 -- --------------------------------------------------------
 
@@ -242,7 +245,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `email`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@gmail.com');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'mayuri.infospace@gmail.com');
 
 --
 -- Indexes for dumped tables
@@ -316,7 +319,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `categories_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `manage_website`
@@ -328,19 +331,19 @@ ALTER TABLE `manage_website`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `order_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_client`
